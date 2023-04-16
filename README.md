@@ -1,4 +1,4 @@
-# DenseNeuralNetwork Class
+# NeuralNetworks
 
 This is an implementation of a dense neural network class in Python. It is based on the book ["Neural Networks and Deep Learning"](http://neuralnetworksanddeeplearning.com) by Michael Nielsen.
 
