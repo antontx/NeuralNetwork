@@ -36,9 +36,6 @@ class DenseNeuralNetwork():
             self.biases[i] -= learning_rate * Δb[i]
 
     def train_sgd(self, training_data, learning_rate=0.1, epochs=250, test_data=None):
-        # stochastic gradient descent
-        features = training_data[0]
-        labels = training_data[1]
         interval = epochs // 100
 
         for epoch in range(epochs):
@@ -52,8 +49,6 @@ class DenseNeuralNetwork():
                     f"Epoch {epoch}: {self.evaluate(test_data[0],test_data[1])}")
 
     def train_batch(self, training_data, learning_rate=0.1, epochs=250, test_data=None):
-        features = training_data[0]
-        labels = training_data[1]
         interval = epochs // 100
 
         for epoch in range(epochs):
