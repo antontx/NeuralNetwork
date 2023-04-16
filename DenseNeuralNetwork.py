@@ -33,8 +33,6 @@ class DenseNeuralNetwork():
             activations.append(a)
             weighted_inputs.append(z)
 
-        # dimensions(activations)
-
         if not cache:
             return a
         return a, activations, weighted_inputs
@@ -132,13 +130,6 @@ class DenseNeuralNetwork():
             ΔW[l] = np.dot(δ[l], a[l].transpose())
 
         return Δb, ΔW
-        """Return the vector of partial derivatives \partial C_x /
-        \partial a for the output activations."""
-        return (output_activations-y)
-
-        """Return the vector of partial derivatives \partial C_x /
-        \partial a for the output activations."""
-        return (output_activations-y)
 
     def evaluate(self, test_data):
         correct = 0
