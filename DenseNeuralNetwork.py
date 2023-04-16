@@ -79,8 +79,6 @@ class DenseNeuralNetwork():
                     f"Epoch {epoch}: {self.evaluate(test_data[0],test_data[1])}")
 
     def train_mini_batch(self, training_data, batch_size=32, learning_rate=0.1, epochs=250, test_data=None):
-        features = training_data[0]
-        labels = training_data[1]
         interval = max(1, int(epochs / 10))
 
         for epoch in range(epochs):
@@ -92,12 +90,11 @@ class DenseNeuralNetwork():
             # shuffle the training data for each epoch
             random.shuffle(training_data)
 
-            for i in range(0, len(labels), batch_size):
-                batch_features = features[i:i+batch_size]
-                batch_labels = labels[i:i+batch_size]
-                batch_size = len(batch_labels)
+            for i in range(0, len(training_data), batch_size):
+                batch = training_data[i:i+batch_size]
+                batch_size = len(batch)
 
-                for x, y in zip(batch_features, batch_labels):
+                for x, y in batch:
                     # calculate the gradient for the current example
                     delta_b, delta_w = self.backprop(x, y)
                     nabla_b += delta_b
@@ -144,7 +141,7 @@ class DenseNeuralNetwork():
     def evaluate(self, test_data):
         correct = 0
         for x, y in test_data:
-            if np.argmax(y) == np.argmax(self.feedforward(x)):
+            if np.argmax(y) == np.argmax(self.feed_forward(x)):
                 correct += 1
         return f"{correct}/{len(test_data)}"
 
