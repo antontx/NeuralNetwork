@@ -10,7 +10,7 @@ training_data, test_data = load("MNIST_dataset")
 mlp = dnn.DenseNeuralNetwork([784, 32, 16, 10])
 
 print("training")
-mlp.train_mini_batch(training_data,epochs=30, batch_size=10, learning_rate=1, test_data=test_data)
+mlp.train(training_data=training_data, epochs=20, batch_size=32, learning_rate=0.1, test_data=test_data, gd="mini-batch")
 
 
 print("done!")

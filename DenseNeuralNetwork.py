@@ -48,17 +48,17 @@ class DenseNeuralNetwork():
             else:
                 raise Exception("Invalid Gradient Descent Method")
 
-            if epoch % interval == 0:
+            if epoch % interval == 0 or epoch == epochs - 1:
                 print(
-                    f"Epoch {epoch}: {self.evaluate(test_data)}")
+                    f"Epoch {epoch+1}: {self.evaluate(test_data)}")
 
-    def train_sgd(self, training_data, learning_rate=0.1, epochs=250, test_data=None):
+    def train_sgd(self, training_data, learning_rate=None, epochs=None, test_data=None):
         for x, y in training_data:  # for every example in the data set
                 Δb, ΔW = self.backprop(x, y)  # calculate the gradient
                 # update the parameters
                 self.update_parameters(ΔW, Δb, learning_rate)
 
-    def train_batch(self, training_data, learning_rate=0.1, epochs=250, test_data=None):
+    def train_batch(self, training_data, learning_rate=None, epochs=None, test_data=None):
         nabla_b = np.array([np.zeros(b.shape)
                             for b in self.biases], dtype=object)
         nabla_w = np.array([np.zeros(w.shape)
