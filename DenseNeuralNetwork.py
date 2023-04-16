@@ -141,10 +141,6 @@ def sigmoid(x, derivative=False):
     if derivative:
         return sigmoid(x)*(1-sigmoid(x))
     return 1/(1+np.exp(-x))
-
-def sigmoid_prime(x):
-    return sigmoid(x, derivative=True)
-
     for arr in arrays_list:
         print(arr.shape)
     print()
