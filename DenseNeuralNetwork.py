@@ -2,9 +2,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 
+def sigmoid(x, derivative=False):
+    if derivative:
+        return sigmoid(x)*(1-sigmoid(x))
+    return 1/(1+np.exp(-x))
+
+def ReLu(x, derivative=False):
+    if derivative:
+        return (x > 0).astype(int)
+    return np.maximum(0, x)
+
 
 class DenseNeuralNetwork():
-    def __init__(self, layer_sizes) -> None:
+    def __init__(self, layer_sizes,  activation_function = sigmoid):
         self.layer_sizes = layer_sizes
         self.layer_count = len(layer_sizes)  # = L
 
@@ -137,10 +147,3 @@ class DenseNeuralNetwork():
                 correct += 1
         return f"{correct}/{len(test_data)}"
 
-def sigmoid(x, derivative=False):
-    if derivative:
-        return sigmoid(x)*(1-sigmoid(x))
-    return 1/(1+np.exp(-x))
-    for arr in arrays_list:
-        print(arr.shape)
-    print()
