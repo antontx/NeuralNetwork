@@ -137,19 +137,6 @@ class DenseNeuralNetwork():
                 correct += 1
         return f"{correct}/{len(test_data)}"
 
-    def network_dimensions(self):
-        print(f"layers ({self.layer_count})")
-        for layer_size in self.layer_sizes:
-            print(layer_size)
-        print()
-
-        print("weights")
-        dimensions(self.weights)
-
-        print("biases")
-        dimensions(self.biases)
-
-
 def sigmoid(x, derivative=False):
     if derivative:
         return sigmoid(x)*(1-sigmoid(x))
