@@ -30,79 +30,76 @@ class DenseNeuralNetwork():
         return a, activations, weighted_inputs
 
     def update_parameters(self, ΔW, Δb, learning_rate):
-
         for i in range(len(self.weights)):
             self.weights[i] -= learning_rate * ΔW[i]
             self.biases[i] -= learning_rate * Δb[i]
 
-    def train_sgd(self, training_data, learning_rate=0.1, epochs=250, test_data=None):
-        interval = epochs // 100
+    def train(self, training_data, gd = "mini-batch",batch_size= 32, learning_rate=0.1, epochs=250, test_data=None, interval = None):
+        if interval == None:
+            interval = epochs // 100 if epochs >= 100 else 5
 
         for epoch in range(epochs):
-            for x, y in training_data:  # for every example in the data set
-                Δb, ΔW = self.backprop(x, y)  # calculate the gradient
-                # update the parameters
-                self.update_parameters(ΔW, Δb, learning_rate)
-
-            if epoch % interval == 0:
-                print(
-                    f"Epoch {epoch}: {self.evaluate(test_data[0],test_data[1])}")
-
-    def train_batch(self, training_data, learning_rate=0.1, epochs=250, test_data=None):
-        interval = epochs // 100
-
-        for epoch in range(epochs):
-            nabla_b = np.array([np.zeros(b.shape)
-                               for b in self.biases], dtype=object)
-            nabla_w = np.array([np.zeros(w.shape)
-                               for w in self.weights], dtype=object)
-
-            for x, y in training_data:  # for every example in the data set
-                Δb, ΔW = self.backprop(x, y)  # calculate the gradient
-
-                nabla_b += Δb
-                nabla_w += ΔW
-
-            nabla_b /= len(training_data)
-            nabla_w /= len(training_data)
-
-            # update the parameters
-            self.update_parameters(nabla_w, nabla_b, learning_rate)
+            if gd == "mini-batch":
+                self.train_mini_batch(training_data, batch_size, learning_rate, epochs, test_data)
+            elif gd == "batch":
+                self.train_batch(training_data, learning_rate, epochs, test_data)
+            elif gd == "sgd":
+                self.train_sgd(training_data, learning_rate, epochs, test_data)
+            else:
+                raise Exception("Invalid Gradient Descent Method")
 
             if epoch % interval == 0:
                 print(
                     f"Epoch {epoch}: {self.evaluate(test_data)}")
 
+    def train_sgd(self, training_data, learning_rate=0.1, epochs=250, test_data=None):
+        for x, y in training_data:  # for every example in the data set
+                Δb, ΔW = self.backprop(x, y)  # calculate the gradient
+                # update the parameters
+                self.update_parameters(ΔW, Δb, learning_rate)
+
+    def train_batch(self, training_data, learning_rate=0.1, epochs=250, test_data=None):
+        nabla_b = np.array([np.zeros(b.shape)
+                            for b in self.biases], dtype=object)
+        nabla_w = np.array([np.zeros(w.shape)
+                            for w in self.weights], dtype=object)
+
+        for x, y in training_data:  # for every example in the data set
+            Δb, ΔW = self.backprop(x, y)  # calculate the gradient
+
+            nabla_b += Δb
+            nabla_w += ΔW
+
+        nabla_b /= len(training_data)
+        nabla_w /= len(training_data)
+
+        # update the parameters
+        self.update_parameters(nabla_w, nabla_b, learning_rate)
+
     def train_mini_batch(self, training_data, batch_size=32, learning_rate=0.1, epochs=250, test_data=None):
-        interval = max(1, int(epochs / 10))
+        nabla_b = np.array([np.zeros(b.shape)
+                            for b in self.biases], dtype=object)
+        nabla_w = np.array([np.zeros(w.shape)
+                            for w in self.weights], dtype=object)
 
-        for epoch in range(epochs):
-            nabla_b = np.array([np.zeros(b.shape)
-                               for b in self.biases], dtype=object)
-            nabla_w = np.array([np.zeros(w.shape)
-                               for w in self.weights], dtype=object)
+        # shuffle the training data for each epoch
+        random.shuffle(training_data)
 
-            # shuffle the training data for each epoch
-            random.shuffle(training_data)
+        for i in range(0, len(training_data), batch_size):
+            batch = training_data[i:i+batch_size]
+            batch_size = len(batch)
 
-            for i in range(0, len(training_data), batch_size):
-                batch = training_data[i:i+batch_size]
-                batch_size = len(batch)
+            for x, y in batch:
+                # calculate the gradient for the current example
+                delta_b, delta_w = self.backprop(x, y)
+                nabla_b += delta_b
+                nabla_w += delta_w
 
-                for x, y in batch:
-                    # calculate the gradient for the current example
-                    delta_b, delta_w = self.backprop(x, y)
-                    nabla_b += delta_b
-                    nabla_w += delta_w
+            # calculate the average gradient over the mini-batch
+            nabla_b /= batch_size
+            nabla_w /= batch_size
 
-                # calculate the average gradient over the mini-batch
-                nabla_b /= batch_size
-                nabla_w /= batch_size
-
-                self.update_parameters(nabla_w, nabla_b, learning_rate)
-
-            if epoch % interval == 0:
-                print(f"Epoch {epoch}: {self.evaluate(test_data)}")
+            self.update_parameters(nabla_w, nabla_b, learning_rate)
 
     def backprop(self, x, y):
         L = self.layer_count - 2
