@@ -17,10 +17,13 @@ class DenseNeuralNetwork():
     def __init__(self, layer_sizes,  activation_function = sigmoid):
         self.layer_sizes = layer_sizes
         self.layer_count = len(layer_sizes)  # = L
+        self.activation_function = activation_function
+
 
         self.biases = [np.random.randn(y, 1) for y in self.layer_sizes[1:]]
         self.weights = [np.random.randn(y, x)
                         for x, y in zip(self.layer_sizes[:-1], self.layer_sizes[1:])]
+        
 
     def feed_forward(self, a, cache=False):
         activations = [a]
@@ -28,7 +31,7 @@ class DenseNeuralNetwork():
 
         for b, w in zip(self.biases, self.weights):
             z = np.dot(w, a)+b
-            a = sigmoid(z)
+            a = self.activation_function(z)
 
             activations.append(a)
             weighted_inputs.append(z)
@@ -117,7 +120,7 @@ class DenseNeuralNetwork():
 
         _, a, z = self.feed_forward(x, True)
 
-        δ[L] = np.multiply(a[-1]-y, sigmoid(z[-1], True))
+        δ[L] = np.multiply(a[-1]-y, self.activation_function(z[-1], True))
 
         Δb[L] = δ[L]
         ΔW[L] = np.dot(δ[L], a[L].transpose())
@@ -125,7 +128,7 @@ class DenseNeuralNetwork():
         for l in range(L-1, -1, -1):
 
             δ[l] = np.multiply(
-                np.dot(self.weights[l+1].transpose(), δ[l+1]), sigmoid(z[l], True))
+                np.dot(self.weights[l+1].transpose(), δ[l+1]), self.activation_function(z[l], True))
             Δb[l] = δ[l]
             ΔW[l] = np.dot(δ[l], a[l].transpose())
 
@@ -138,3 +141,9 @@ class DenseNeuralNetwork():
                 correct += 1
         return f"{correct}/{len(test_data)}"
 
+    def MeanSquaredError(self, test_data):
+        mse = 0
+        for x, y in test_data:
+            y_hat = self.feed_forward(x)
+            mse += (y_hat-y)**2
+        return mse/len(test_data)
