@@ -56,6 +56,11 @@ Runs a feedforward pass through the neural network with the given input activati
 
 #### Returns:
 - If `cache=False`, returns a 1D numpy array representing the output activations of the neural network.
+    - to devectorize the output of the neural network, one can pass the output activations array through the argmax() function which is included in the Numpy library
+    ```python
+    output = np.argmax(network.feed_forward(x))
+    ```
+
 - If `cache=True`, returns a tuple `(output_activations, activations, weighted_inputs)`, where:
     - `output_activations`: 1D numpy array representing the output activations of the neural network.
     - `activations`: list of 1D numpy arrays representing the activations of all layers of the neural network, including the input layer.
