@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import DenseNeuralNetwork as dnn
 from MNISTDataLoader import load
 np.random.seed(1)
