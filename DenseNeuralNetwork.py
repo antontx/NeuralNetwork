@@ -63,15 +63,15 @@ class DenseNeuralNetwork():
                 nabla_b += Δb
                 nabla_w += ΔW
 
-            nabla_b /= len(labels)
-            nabla_w /= len(labels)
+            nabla_b /= len(training_data)
+            nabla_w /= len(training_data)
 
             # update the parameters
             self.update_parameters(nabla_w, nabla_b, learning_rate)
 
             if epoch % interval == 0:
                 print(
-                    f"Epoch {epoch}: {self.evaluate(test_data[0],test_data[1])}")
+                    f"Epoch {epoch}: {self.evaluate(test_data)}")
 
     def train_mini_batch(self, training_data, batch_size=32, learning_rate=0.1, epochs=250, test_data=None):
         interval = max(1, int(epochs / 10))
