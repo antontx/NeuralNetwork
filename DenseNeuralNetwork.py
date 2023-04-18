@@ -7,17 +7,11 @@ def sigmoid(x, derivative=False):
         return sigmoid(x)*(1-sigmoid(x))
     return 1/(1+np.exp(-x))
 
-def ReLu(x, derivative=False):
-    if derivative:
-        return (x > 0).astype(int)
-    return np.maximum(0, x)
-
-
 class DenseNeuralNetwork():
-    def __init__(self, layer_sizes,  activation_function = sigmoid):
+    def __init__(self, layer_sizes):
         self.layer_sizes = layer_sizes
         self.layer_count = len(layer_sizes)  # = L
-        self.activation_function = activation_function
+
 
 
         self.biases = [np.random.randn(y, 1) for y in self.layer_sizes[1:]]
@@ -31,7 +25,7 @@ class DenseNeuralNetwork():
 
         for b, w in zip(self.biases, self.weights):
             z = np.dot(w, a)+b
-            a = self.activation_function(z)
+            a = sigmoid(z)
 
             activations.append(a)
             weighted_inputs.append(z)
@@ -120,7 +114,7 @@ class DenseNeuralNetwork():
 
         _, a, z = self.feed_forward(x, True)
 
-        δ[L] = np.multiply(a[-1]-y, self.activation_function(z[-1], True))
+        δ[L] = np.multiply(a[-1]-y, sigmoid(z[-1], True))
 
         Δb[L] = δ[L]
         ΔW[L] = np.dot(δ[L], a[L].transpose())
@@ -128,7 +122,7 @@ class DenseNeuralNetwork():
         for l in range(L-1, -1, -1):
 
             δ[l] = np.multiply(
-                np.dot(self.weights[l+1].transpose(), δ[l+1]), self.activation_function(z[l], True))
+                np.dot(self.weights[l+1].transpose(), δ[l+1]), sigmoid(z[l], True))
             Δb[l] = δ[l]
             ΔW[l] = np.dot(δ[l], a[l].transpose())
 

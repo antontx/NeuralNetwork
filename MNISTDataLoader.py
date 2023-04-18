@@ -69,8 +69,7 @@ def load( dataset_path):
     test_images = os.path.join(dataset_path, "t10k-images.idx3-ubyte")
     test_labels = os.path.join(dataset_path, "t10k-labels.idx1-ubyte")
     TEST_SIZE = 10000
-
-    print("converting...")
+    
     test_data = convert(test_labels, test_images, TEST_SIZE)
     training_data = convert(training_labels, training_images, TRAINING_SIZE)
 
