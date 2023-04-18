@@ -55,7 +55,7 @@ class DenseNeuralNetwork():
 
             if epoch % interval == 0 or epoch == epochs - 1:
                 print(
-                    f"Epoch {epoch+1}: {self.evaluate(test_data)}")
+                    f"Epoch {epoch}: {self.evaluate(test_data)}")
 
     def train_sgd(self, training_data, learning_rate=None, epochs=None, test_data=None):
         for x, y in training_data:  # for every example in the data set
