@@ -82,9 +82,9 @@ class DenseNeuralNetwork():
         self.update_parameters(nabla_w, nabla_b, learning_rate)
 
     def train_mini_batch(self, training_data, batch_size=32, learning_rate=0.1, epochs=250, test_data=None):
-        nabla_b = np.array([np.zeros(b.shape)
+        bias_gradients = np.array([np.zeros(b.shape)
                             for b in self.biases], dtype=object)
-        nabla_w = np.array([np.zeros(w.shape)
+        weight_gradients = np.array([np.zeros(w.shape)
                             for w in self.weights], dtype=object)
 
         # shuffle the training data for each epoch
@@ -96,37 +96,37 @@ class DenseNeuralNetwork():
 
             for x, y in batch:
                 # calculate the gradient for the current example
-                delta_b, delta_w = self.backprop(x, y)
-                nabla_b += delta_b
-                nabla_w += delta_w
+                bias_gradients_single, weight_gradients_single = self.backprop(x, y)
+                bias_gradients += bias_gradients_single
+                weight_gradients += weight_gradients_single
 
             # calculate the average gradient over the mini-batch
-            nabla_b /= batch_size
-            nabla_w /= batch_size
+            bias_gradients /= batch_size
+            weight_gradients /= batch_size
 
-            self.update_parameters(nabla_w, nabla_b, learning_rate)
+            self.update_parameters(weight_gradients, bias_gradients, learning_rate)
 
     def backprop(self, x, y):
-        L = self.layer_count - 2
-        ΔW = np.array([np.zeros(w.shape) for w in self.weights], dtype=object)
-        Δb = np.array([np.zeros(b.shape) for b in self.biases], dtype=object)
-        δ = [0] * (L+1)
+        last_layer = self.layer_count - 2
+        weights_gradients = np.array([np.zeros(w.shape) for w in self.weights], dtype=object)
+        bias_gradients = np.array([np.zeros(b.shape) for b in self.biases], dtype=object)
+        E = [0] * (last_layer+1)
 
         _, a, z = self.feed_forward(x, True)
 
-        δ[L] = np.multiply(a[-1]-y, sigmoid(z[-1], True))
+        E[last_layer] = np.multiply(a[-1]-y, sigmoid(z[-1], True))
 
-        Δb[L] = δ[L]
-        ΔW[L] = np.dot(δ[L], a[L].transpose())
+        bias_gradients[last_layer] = E[last_layer]
+        weights_gradients[last_layer] = np.dot(E[last_layer], a[last_layer].transpose())
 
-        for l in range(L-1, -1, -1):
+        for layer in range(last_layer-1, -1, -1):
 
-            δ[l] = np.multiply(
-                np.dot(self.weights[l+1].transpose(), δ[l+1]), sigmoid(z[l], True))
-            Δb[l] = δ[l]
-            ΔW[l] = np.dot(δ[l], a[l].transpose())
+            E[layer] = np.multiply(
+                np.dot(self.weights[layer+1].transpose(), E[layer+1]), sigmoid(z[layer], True))
+            bias_gradients[layer] = E[layer]
+            weights_gradients[layer] = np.dot(E[layer], a[layer].transpose())
 
-        return Δb, ΔW
+        return bias_gradients, weights_gradients
 
     def evaluate(self, test_data):
         correct = 0
