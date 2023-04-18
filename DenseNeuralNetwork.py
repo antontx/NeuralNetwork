@@ -55,31 +55,31 @@ class DenseNeuralNetwork():
 
             if epoch % interval == 0 or epoch == epochs - 1:
                 print(
-                    f"Epoch {epoch}: {self.evaluate(test_data)}")
+                    f"Epoch {epoch}: {self.evaluate(test_data)} MSE: {np.mean(self.MeanSquaredError(test_data))}")
 
     def train_sgd(self, training_data, learning_rate=None, epochs=None, test_data=None):
         for x, y in training_data:  # for every example in the data set
-                Δb, ΔW = self.backprop(x, y)  # calculate the gradient
+                bias_gradients, weight_gradients = self.backprop(x, y)  # calculate the gradient
                 # update the parameters
-                self.update_parameters(ΔW, Δb, learning_rate)
+                self.update_parameters(weight_gradients, bias_gradients, learning_rate)
 
     def train_batch(self, training_data, learning_rate=None, epochs=None, test_data=None):
-        nabla_b = np.array([np.zeros(b.shape)
+        bias_gradients = np.array([np.zeros(b.shape)
                             for b in self.biases], dtype=object)
-        nabla_w = np.array([np.zeros(w.shape)
+        weight_gradients = np.array([np.zeros(w.shape)
                             for w in self.weights], dtype=object)
 
         for x, y in training_data:  # for every example in the data set
-            Δb, ΔW = self.backprop(x, y)  # calculate the gradient
+            bias_gradients_single, weight_gradients_single = self.backprop(x, y)  # calculate the gradient
 
-            nabla_b += Δb
-            nabla_w += ΔW
+            bias_gradients += bias_gradients_single
+            weight_gradients += weight_gradients_single
 
-        nabla_b /= len(training_data)
-        nabla_w /= len(training_data)
+        bias_gradients /= len(training_data)
+        weight_gradients /= len(training_data)
 
         # update the parameters
-        self.update_parameters(nabla_w, nabla_b, learning_rate)
+        self.update_parameters(weight_gradients, bias_gradients, learning_rate)
 
     def train_mini_batch(self, training_data, batch_size=32, learning_rate=0.1, epochs=250, test_data=None):
         bias_gradients = np.array([np.zeros(b.shape)
