@@ -10,7 +10,7 @@ def sigmoid(x, derivative=False):
 class DenseNeuralNetwork():
     def __init__(self, layer_sizes):
         self.layer_sizes = layer_sizes
-        self.layer_count = len(layer_sizes)  # = L
+        self.layer_count = len(layer_sizes)
 
 
 
