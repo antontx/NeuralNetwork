@@ -56,6 +56,27 @@ class DenseNeuralNetwork():
             if epoch % interval == 0 or epoch == epochs - 1:
                 print(
                     f"Epoch {epoch}: {self.evaluate(test_data)} MSE: {np.mean(self.MeanSquaredError(test_data))}")
+                
+    def train_plot(self, training_data, gd = "mini-batch",batch_size= 32, learning_rate=0.1, epochs=250, test_data=None, interval = None):
+        if interval == None:
+            interval = epochs // 100 if epochs >= 100 else 5
+
+        out = [[np.mean(self.MeanSquaredError(test_data))],[self.evaluate(test_data)]]
+
+        for epoch in range(epochs):
+            if gd == "mini-batch":
+                self.train_mini_batch(training_data, batch_size, learning_rate, epochs, test_data)
+            elif gd == "batch":
+                self.train_batch(training_data, learning_rate, epochs, test_data)
+            elif gd == "sgd":
+                self.train_sgd(training_data, learning_rate, epochs, test_data)
+            else:
+                raise Exception("Invalid Gradient Descent Method")
+
+            if epoch % interval == 0 or epoch == epochs - 1:
+                print(f"Epoch {epoch}: {self.evaluate(test_data)} MSE: {np.mean(self.MeanSquaredError(test_data))}")
+                out[0].append(np.mean(self.MeanSquaredError(test_data)))
+                out[1].append(self.evaluate(test_data))
 
     def train_sgd(self, training_data, learning_rate=None, epochs=None, test_data=None):
         for x, y in training_data:  # for every example in the data set
