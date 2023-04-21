@@ -1,7 +1,7 @@
 import numpy as np
 import os
 
-def vectorize_label( label):
+def one_hot(label,vector_size):
         """
         Converts a numeric label (0-9) into a one-hot encoded vector representation.
         
@@ -11,9 +11,9 @@ def vectorize_label( label):
         Returns:
         numpy.ndarray: a one-hot encoded vector representation of the label
         """
-        e = np.zeros((10, 1))
-        e[label] = 1
-        return e
+        vector = np.zeros((vector_size, 1))
+        vector[label] = 1
+        return vector
     
 def convert(labels, images, size):
     """
@@ -38,7 +38,7 @@ def convert(labels, images, size):
 
     dataset = []
     for i in range(size):
-        label = vectorize_label(int.from_bytes(labelf.read(1),byteorder="big"))
+        label = one_hot(int.from_bytes(labelf.read(1),byteorder="big"),10)
 
         features = np.zeros((n,n))
         for row in range(n):
