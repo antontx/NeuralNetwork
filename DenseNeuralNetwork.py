@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import random
+import csv
 
 def sigmoid(x, derivative=False):
     if derivative:
@@ -18,6 +19,27 @@ class DenseNeuralNetwork():
         self.weights = [np.random.randn(y, x)
                         for x, y in zip(self.layer_sizes[:-1], self.layer_sizes[1:])]
         
+    def save(self, filename):
+        with open(filename, 'w', newline='') as file:
+            writer = csv.writer(file)
+            for w, b in zip(self.weights, self.biases):
+                writer.writerow(w.flatten())
+                writer.writerow(b.flatten())
+
+    def load(self, filename):
+        with open(filename, 'r') as file:
+            reader = csv.reader(file)
+            weights = []
+            biases = []
+            for i in range(self.layer_count-1):
+                w_flat = next(reader)
+                b_flat = next(reader)
+                w = np.array(w_flat, dtype=float).reshape(self.layer_sizes[i+1], self.layer_sizes[i])
+                b = np.array(b_flat, dtype=float).reshape(self.layer_sizes[i+1], 1)
+                weights.append(w)
+                biases.append(b)
+            self.weights = weights
+            self.biases = biases
 
     def feed_forward(self, a, cache=False):
         activations = [a]
