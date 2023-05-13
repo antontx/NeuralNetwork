@@ -65,3 +65,26 @@ Runs a feedforward pass through the neural network with the given input activati
     - `output_activations`: 1D numpy array representing the output activations of the neural network.
     - `activations`: list of 1D numpy arrays representing the activations of all layers of the neural network, including the input layer.
     - `weighted_inputs`: list of 1D numpy arrays representing the weighted inputs to all layers of the neural network, excluding the input layer.
+
+## `load(filename)`
+
+Loads the parameters of a trained neural network from a CSV file.
+
+#### Parameters:
+- `filename`: string representing the filename (including path if necessary) of the CSV file to load the parameters from.
+
+#### Returns:
+A `DenseNeuralNetwork` object with the weights and biases loaded from the CSV file.
+
+---
+
+## `save(filename)`
+
+Saves the parameters of a trained neural network to a CSV file.
+
+#### Parameters:
+- `filename`: string representing the filename (including path if necessary) of the CSV file to save the parameters to.
+
+#### Returns:
+None. The parameters are saved to the specified CSV file.
+
