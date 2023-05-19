@@ -52,25 +52,23 @@ def convert(labels, images, size):
 
     return dataset
 
-def load( dataset_path):
+def load(training_images_path, training_labels_path, test_images_path, test_labels_path):
     """
-    Loads the MNIST training and test datasets from a directory path.
-    
+    Loads the MNIST training and test datasets from the given file paths.
+
     Args:
-    dataset_path (str): the path to the directory containing the MNIST dataset files
-    
+    training_images_path (str): the path to the training images file
+    training_labels_path (str): the path to the training labels file
+    test_images_path (str): the path to the test images file
+    test_labels_path (str): the path to the test labels file
+
     Returns:
     tuple: a tuple containing two lists of feature-label pairs, representing the training and test datasets
     """
-    training_images = os.path.join(dataset_path, "train-images.idx3-ubyte")
-    training_labels = os.path.join(dataset_path, "train-labels.idx1-ubyte") 
     TRAINING_SIZE = 60000
-
-    test_images = os.path.join(dataset_path, "t10k-images.idx3-ubyte")
-    test_labels = os.path.join(dataset_path, "t10k-labels.idx1-ubyte")
     TEST_SIZE = 10000
-    
-    test_data = convert(test_labels, test_images, TEST_SIZE)
-    training_data = convert(training_labels, training_images, TRAINING_SIZE)
+
+    test_data = convert(test_labels_path, test_images_path, TEST_SIZE)
+    training_data = convert(training_labels_path, training_images_path, TRAINING_SIZE)
 
     return training_data, test_data
