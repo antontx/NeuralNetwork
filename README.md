@@ -1,6 +1,6 @@
 # NeuralNetworks
 
-This is an implementation of a dense neural network class in Python. It is based on the book ["Neural Networks and Deep Learning"](http://neuralnetworksanddeeplearning.com) by Michael Nielsen.
+This is an implementation of a dense neural network class in Python. It is mainly based on the book ["Neural Networks and Deep Learning"](http://neuralnetworksanddeeplearning.com) by Michael Nielsen.
 
 The `DenseNeuralNetwork` class can be used to create a neural network with an arbitrary number of layers and neurons per layer. It can be trained using three different gradient descent methods: mini-batch, batch, and stochastic gradient descent.
 
