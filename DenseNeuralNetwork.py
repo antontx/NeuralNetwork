@@ -95,7 +95,7 @@ class DenseNeuralNetwork():
             else:
                 raise Exception("Invalid Gradient Descent Method")
 
-            if epoch % interval == 0 or epoch == epochs - 1:
+            if epoch % interval == 0 or epoch == epochs - 1 or epoch == 0:
                 print(f"Epoch {epoch}: {self.evaluate(test_data)} MSE: {np.mean(self.MeanSquaredError(test_data))}")
                 out[0].append(np.mean(self.MeanSquaredError(test_data)))
                 out[1].append(self.evaluate(test_data))
