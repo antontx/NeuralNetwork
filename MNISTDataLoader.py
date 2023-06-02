@@ -15,7 +15,7 @@ def one_hot(label,vector_size):
         vector[label] = 1
         return vector
     
-def convert(labels, images, size):
+def convert(labels, images, size, output_vector_size):
     """
     Converts MNIST dataset files into a list of feature-label pairs.
     
@@ -38,7 +38,7 @@ def convert(labels, images, size):
 
     dataset = []
     for i in range(size):
-        label = one_hot(int.from_bytes(labelf.read(1),byteorder="big"),10)
+        label = one_hot(int.from_bytes(labelf.read(1),byteorder="big"),output_vector_size)
 
         features = np.zeros((n,n))
         for row in range(n):
@@ -52,7 +52,7 @@ def convert(labels, images, size):
 
     return dataset
 
-def load(training_images_path, training_labels_path, test_images_path, test_labels_path):
+def load(training_images_path, training_labels_path, test_images_path, test_labels_path, training_size, test_size, output_vector_size):
     """
     Loads the MNIST training and test datasets from the given file paths.
 
@@ -61,14 +61,14 @@ def load(training_images_path, training_labels_path, test_images_path, test_labe
     training_labels_path (str): the path to the training labels file
     test_images_path (str): the path to the test images file
     test_labels_path (str): the path to the test labels file
+    training_size (int): the size of the training dataset
+    test_size (int): the size of the test dataset
 
     Returns:
     tuple: a tuple containing two lists of feature-label pairs, representing the training and test datasets
     """
-    TRAINING_SIZE = 60000
-    TEST_SIZE = 10000
 
-    test_data = convert(test_labels_path, test_images_path, TEST_SIZE)
-    training_data = convert(training_labels_path, training_images_path, TRAINING_SIZE)
+    test_data = convert(test_labels_path, test_images_path, test_size, output_vector_size)
+    training_data = convert(training_labels_path, training_images_path, training_size, output_vector_size)
 
     return training_data, test_data
